@@ -3,29 +3,40 @@ import os
 from spotipy.extract.extract_json import Json
 from spotipy.module import Album, Track, Artist, SpotifyData
 from spotipy.constants import SongFileKeys
+from spotipy import PathNotExist
+from spotipy import FailedToParseJsonFile
+from spotipy import KeyDoesNotExist
 
 
 def json_to_spotify_data(dir_path):
     info = SpotifyData()
 
+    if not os.path.exists(dir_path):
+        raise PathNotExist("Path " + dir_path + " not found")
+
     for roots, dirs, files in os.walk(dir_path):
         for file in files:
-            add_data_of_json_file(info, dir_path + "//" + file)
+            try:
+                add_data_of_json_file(info, dir_path + "//" + file)
+            except KeyDoesNotExist as e:
+                raise FailedToParseJsonFile("Cannot extract file " + file + ": " + str(e))
 
     return info
 
 
 def add_data_of_json_file(info, path):
-    json_data = Json(path).data.get(SongFileKeys.TRACK_KEY_NAME)
-
-    for artist in json_data.get(SongFileKeys.ARTISTS_LIST_KEY_NAME):
-        add_album_to_artist(info,
-                            artist,
-                            album_id=json_data.get(SongFileKeys.ALBUM_KEY_NAME).get(SongFileKeys.ALBUM_ID_NAME),
-                            album=Album(json_data.get(SongFileKeys.ALBUM_KEY_NAME).get(SongFileKeys.ALBUM_NAME_NAME)),
-                            track_id=json_data.get(SongFileKeys.TRACK_ID_NAME),
-                            track=Track(json_data.get(SongFileKeys.TRACK_NAME_NAME),
-                                        json_data.get(SongFileKeys.TRACK_POPULARITY_NAME)))
+    try:
+        json_data = Json(path).data.get(SongFileKeys.TRACK_KEY_NAME)
+        for artist in json_data.get(SongFileKeys.ARTISTS_LIST_KEY_NAME):
+            add_album_to_artist(info,
+                                artist,
+                                album_id=json_data.get(SongFileKeys.ALBUM_KEY_NAME).get(SongFileKeys.ALBUM_ID_NAME),
+                                album=Album(json_data.get(SongFileKeys.ALBUM_KEY_NAME).get(SongFileKeys.ALBUM_NAME_NAME)),
+                                track_id=json_data.get(SongFileKeys.TRACK_ID_NAME),
+                                track=Track(json_data.get(SongFileKeys.TRACK_NAME_NAME),
+                                            json_data.get(SongFileKeys.TRACK_POPULARITY_NAME)))
+    except AttributeError or TypeError as e:
+        raise KeyDoesNotExist(e)
 
 
 def add_album_to_artist(info, artist, album_id, album, track_id, track):
