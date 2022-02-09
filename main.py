@@ -1,11 +1,19 @@
-from spotipy import Json
+import os
+
+from spotipy.extract.json_to_obj import json_to_spotify_data
 
 
 def main():
-    x = Json("songs//song_2fuCquhmrzHpu5xcA1ci9x.json")
-    print(x.data)
-    print(x.data.get("track"))
-    print(x.data.get("track").get("album"))
+    info = json_to_spotify_data(os.path.abspath("songs"))
+    for artist in info.artists.keys():
+        print("artist:", info.artists[artist].name)
+        for album in info.artists[artist].albums.keys():
+            print("album:", info.artists[artist].albums[album].name)
+            for song in info.artists[artist].albums[album].songs.keys():
+                print("song:", info.artists[artist].albums[album].songs[song].name,
+                      info.artists[artist].albums[album].songs[song].popularity)
+        print()
+        print()
 
 
 if __name__ == '__main__':
