@@ -1,1 +1,1 @@
-from spotipy.exceptions.exceptions import *
+from spotipy.exceptions import *
