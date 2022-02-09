@@ -15,3 +15,4 @@ class Json:
             except json.decoder.JSONDecodeError:
                 parsed = {}
         return parsed
+
