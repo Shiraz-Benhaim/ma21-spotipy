@@ -1,24 +1,25 @@
 from typing import List
+from typing import Dict
 
 
-class Song:
-    def __init__(self, id, name, popularity, genre):
-        self.id = id
+class Track:
+    def __init__(self, name, popularity):
         self.name = name
         self.popularity = popularity
-        self.genre = genre
 
 
 class Album:
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
-        self.songs = List[Song]
+        self.songs = {}
 
 
 class Artist:
-    def __init__(self, id, name, genre):
-        self.id = id
+    def __init__(self, name):
         self.name = name
-        self.albums = List[Album]
-        self.genre = genre
+        self.albums = {}
+
+
+class SpotifyData:
+    def __init__(self):
+        self.artists = {}
