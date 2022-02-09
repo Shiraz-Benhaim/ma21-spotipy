@@ -11,3 +11,18 @@ class FailedToParseJsonFile(Exception):
 
 class KeyDoesNotExist(Exception):
     pass
+
+
+"""Users"""
+
+
+class UserDoesNotExist(Exception):
+    pass
+
+
+class UserAlreadyExist(Exception):
+    pass
+
+
+class WrongPassword(Exception):
+    pass

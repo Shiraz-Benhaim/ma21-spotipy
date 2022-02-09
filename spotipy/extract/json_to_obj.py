@@ -1,5 +1,6 @@
 import os
 
+import spotipy.logger
 from spotipy.extract.extract_json import Json
 from spotipy.module import Album, Track, Artist, SpotifyData
 from spotipy.constants import SongFileKeys
@@ -12,15 +13,20 @@ def json_to_spotify_data(dir_path):
     info = SpotifyData()
 
     if not os.path.exists(dir_path):
-        raise PathNotExist("Path " + dir_path + " not found")
+        spotipy.log.error(f"Wrong songs path {dir_path}")
+        raise PathNotExist(f"Path {dir_path} not found")
 
     for roots, dirs, files in os.walk(dir_path):
         for file in files:
             try:
-                add_data_of_json_file(info, dir_path + "//" + file)
-            except KeyDoesNotExist as e:
-                raise FailedToParseJsonFile("Cannot extract file " + file + ": " + str(e))
+                add_data_of_json_file(info, dir_path + "\\" + file)
+            # The action would not stop because of one file failure
+            except FailedToParseJsonFile as e:
+                spotipy.log.error(str(e))
+            except KeyDoesNotExist:
+                spotipy.log.error(f"Error load the data from file {file} to spotify")
 
+    spotipy.log.debug(f"Done with loading json files")
     return info
 
 
@@ -35,6 +41,8 @@ def add_data_of_json_file(info, path):
                                 track_id=json_data.get(SongFileKeys.TRACK_ID_NAME),
                                 track=Track(json_data.get(SongFileKeys.TRACK_NAME_NAME),
                                             json_data.get(SongFileKeys.TRACK_POPULARITY_NAME)))
+    except FailedToParseJsonFile as e:
+        raise e
     except AttributeError or TypeError as e:
         raise KeyDoesNotExist(e)
 

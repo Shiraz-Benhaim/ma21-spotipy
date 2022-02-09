@@ -1,8 +1,11 @@
 import json
+import spotipy
+from spotipy import FailedToParseJsonFile
 
 
 class Json:
     def __init__(self, json_file):
+        spotipy.log.debug(f"Init JSON obj with {json_file}")
         self.file = json_file
         self.data = self.parse()
 
@@ -13,6 +16,6 @@ class Json:
                 parsed = json.load(json_file)
                 json_file.close()
             except json.decoder.JSONDecodeError:
-                parsed = {}
+                raise FailedToParseJsonFile(f"Bad format of json in file {self.file}")
         return parsed
 
