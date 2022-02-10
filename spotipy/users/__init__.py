@@ -2,10 +2,9 @@ import json
 import os
 
 import spotipy
-from spotipy import Path, Suffix, UserFileKeys, UserTypes, UserDoesNotExist, utils
+from spotipy import Path, Suffix, UserFileKeys, UserTypes, utils, UserDoesNotExist
 from spotipy.extract.extract_json import Json
 from spotipy.users.different_users import create_user
-from spotipy.users.user import User
 
 
 def login(username, password):
@@ -14,8 +13,9 @@ def login(username, password):
     if os.path.exists(user_file_path):
         try:
             user_data = Json(user_file_path).data
+            user = create_user(username, password, user_data.get(UserFileKeys.USER_TYPE_KEY_NAME, UserTypes.REGULAR))
             spotipy.log.info(f"User '{username}' logged in successfully")
-            return User(username, password)
+            return user
         except Exception as e:
             spotipy.log.info(f"Login attempt failed because file '{username}' is in bad format")
             raise e
