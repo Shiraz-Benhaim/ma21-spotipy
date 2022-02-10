@@ -43,13 +43,10 @@ class ArtistIdNotFound(Exception):
     pass
 
 
-<<<<<<< HEAD
-=======
 class ArtistNameNotFound(Exception):
     pass
 
 
->>>>>>> users
 class AlbumIdNotFound(Exception):
     pass
 
