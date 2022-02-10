@@ -3,7 +3,7 @@ from typing import List
 
 import spotipy
 from spotipy import Path, Suffix, UserFileKeys, PlaylistAlreadyExist, KeyDoesNotExist, utils, \
-    UserPermissions, UnauthorizedRequest
+    UserPermissions, UnauthorizedRequest, Search
 from spotipy.extract.extract_json import Json
 
 
@@ -15,7 +15,7 @@ class User:
         self._user_data = Json(self._user_file_path).data
         self._permissions = UserPermissions(is_premium)
 
-    def __update_user_file(self):
+    def _update_user_file(self):
         """Will be called after every change in data"""
         utils.Utils.write_to_file(self._user_file_path, json.dumps(self._user_data))
 
@@ -35,6 +35,10 @@ class User:
         except KeyDoesNotExist:
             spotipy.log.info(f"Creation of playlist '{playlist_name}' failed because the json file is in a bad format")
 
+    def __get_valid_tracks(self, songs):
+        all_tracks_ids = Search.get_all_tracks_ids()
+        return set(all_tracks_ids).intersection(songs)
+
     def __add_playlist_force(self, playlist_name, songs):
         songs_limit = self._permissions.PLAYLIST_TRACKS_NUM_LIMIT
         songs = songs if songs_limit is None or songs_limit >= len(songs) \
@@ -49,6 +53,7 @@ class User:
     def add_playlist(self, playlist_name, songs: List[str]):
         spotipy.log.debug(f"User '{self.username}' tries to add playlist '{playlist_name}'")
         self.__playlist_name_validation(playlist_name)
+        songs = list(self.__get_valid_tracks(songs))
 
         try:
             playlist_limit = self._permissions.PLAYLISTS_NUM_LIMIT

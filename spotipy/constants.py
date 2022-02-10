@@ -29,6 +29,12 @@ class UserFileKeys:
     TRACKS_LIST_KEY_NAME = "tracks"
 
 
+class ArtistFileKeys(UserFileKeys):
+    ALBUMS_LIST_KEY_NAME = "albums"
+    ALBUM_ID_NAME = "id"
+    ALBUM_NAME_NAME = "name"
+
+
 class UserTypes:
     REGULAR = 0
     PREMIUM = 1
