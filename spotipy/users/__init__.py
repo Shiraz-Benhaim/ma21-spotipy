@@ -2,9 +2,15 @@ import json
 import os
 
 import spotipy
+<<<<<<< HEAD
 from spotipy import Path, Suffix, UserDoesNotExist
 from spotipy.extract.extract_json import Json
 from spotipy.users.user import User
+=======
+from spotipy import Path, Suffix, UserFileKeys, UserTypes, utils, UserDoesNotExist, Search
+from spotipy.extract.extract_json import Json
+from spotipy.users.different_users import create_user
+>>>>>>> users
 
 
 def login(username, password):
@@ -13,18 +19,27 @@ def login(username, password):
     if os.path.exists(user_file_path):
         try:
             user_data = Json(user_file_path).data
+            user = create_user(username, password, user_data.get(UserFileKeys.USER_TYPE_KEY_NAME, UserTypes.REGULAR))
             spotipy.log.info(f"User '{username}' logged in successfully")
-            return User(username, password)
+            return user
         except Exception as e:
             spotipy.log.info(f"Login attempt failed because file '{username}' is in bad format")
             raise e
     else:
         """ DEBUG
+<<<<<<< HEAD
         user_type = 0  # TODO: check if username is in artists
+=======
+        user_type = UserTypes.ARTIST if username in Search.get_artists_names() else UserTypes.REGULAR
+>>>>>>> users
         user_file = {UserFileKeys.PASSWORD_KEY_NAME: password,
-                     UserFileKeys.USER_TYPE_KEY_NAME: 0,
+                     UserFileKeys.USER_TYPE_KEY_NAME: user_type,
                      UserFileKeys.PLAYLIST_LIST_KEY_NAME: []}
         utils.Utils.write_to_file(f"{Path.USERS_DIR}\\{username}{Suffix.JSON}", json.dumps(user_file))
+<<<<<<< HEAD
+=======
+        user = create_user(username, password, user_type)
+>>>>>>> users
         """
         spotipy.log.info(f"Login attempt failed because the user '{username}' does not exist")
         raise UserDoesNotExist(f"User '{username}' does not exist")

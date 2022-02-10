@@ -23,6 +23,27 @@ class SongFileKeys:
 
 class UserFileKeys:
     PASSWORD_KEY_NAME = "password"
+    USER_TYPE_KEY_NAME = "user_type"
     PLAYLIST_LIST_KEY_NAME = "playlists"
     PLAYLIST_NAME_KEY = "name"
     TRACKS_LIST_KEY_NAME = "tracks"
+
+
+class ArtistFileKeys(UserFileKeys):
+    ALBUMS_LIST_KEY_NAME = "albums"
+    ALBUM_ID_NAME = "id"
+    ALBUM_NAME_NAME = "name"
+
+
+class UserTypes:
+    REGULAR = 0
+    PREMIUM = 1
+    ARTIST = 2
+
+
+class UserPermissions:
+    def __init__(self, is_premium):
+        self.PLAYLISTS_NUM_LIMIT = None if is_premium else 5
+        self.PLAYLIST_TRACKS_NUM_LIMIT = None if is_premium else 5
+        self.PLAYLIST_TRACKS_NUM_LIMIT = None if is_premium else 20
+        self.SEARCH_RESULTS_LIMIT = None if is_premium else 5
