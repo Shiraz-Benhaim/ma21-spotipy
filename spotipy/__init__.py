@@ -12,8 +12,17 @@ Utils.create_folder_if_not_exists(Path.USERS_DIR)
 
 def run():
     try:
+        """
         info = json_to_spotify_data(Path.SONGS_DIR)
-        """       
+
+        search = SearchRequests(info, UserPermissions(False))
+
+        print(search.search_any_request(search.get_artists_names))
+        print(search.search_any_request(search.albums_of_artist, "2l6M7GaS9x3rZOX6nDX3CM"))
+        print(search.search_any_request(search.sorted_ten_tracks_by_popularity_of_artist, "39jFFncu6W0phhYK16Dp9g"))
+        print(search.search_any_request(search.tracks_of_album, "6RWrvfIB8WGLNwYN1SKvZA"))
+
+        
         for artist in info.artists.keys():
             print("artist:", info.artists[artist].name)
             for album in info.artists[artist].albums.keys():
@@ -28,7 +37,7 @@ def run():
         print(e)
 
     try:
-        user = login("shiraz", "pass")
+        user = login("lili", "pass")
     except UserDoesNotExist as e:
         print(e)
         return
