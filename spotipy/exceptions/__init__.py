@@ -34,3 +34,18 @@ class PlaylistAlreadyExist(Exception):
 
 class UnauthorizedRequest(Exception):
     pass
+
+
+"""Search"""
+
+
+class ArtistIdNotFound(Exception):
+    pass
+
+
+class AlbumIdNotFound(Exception):
+    pass
+
+
+class ArtistIdNotFound(Exception):
+    pass
