@@ -10,10 +10,11 @@ from spotipy.utils import *
 # globals
 log = spotipy.logger.create_logger()
 info = json_to_spotify_data(Path.SONGS_DIR)
+Utils.create_folder_if_not_exists(Path.USERS_DIR)
+curr_user = None
 
 
 def run():
-    Utils.create_folder_if_not_exists(Path.USERS_DIR)
     try:
         """
         search = SearchRequests(UserPermissions(False))

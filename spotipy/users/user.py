@@ -47,7 +47,7 @@ class User:
                         UserFileKeys.TRACKS_LIST_KEY_NAME: songs}
         self._user_data[UserFileKeys.PLAYLIST_LIST_KEY_NAME] = \
             self._user_data.get(UserFileKeys.PLAYLIST_LIST_KEY_NAME, []) + [new_playlist]
-        self.__update_user_file()
+        self._update_user_file()
         spotipy.log.info(f"Playlist '{playlist_name}' created successfully for user '{self.username}'")
 
     def add_playlist(self, playlist_name, songs: List[str]):
