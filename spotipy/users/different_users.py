@@ -1,4 +1,5 @@
-from spotipy import Search, ArtistFileKeys
+from spotipy import ArtistFileKeys
+from spotipy.search.spotipy_search import Search
 from spotipy.users.user import User
 
 

@@ -2,8 +2,9 @@ import json
 import os
 
 import spotipy
-from spotipy import Path, Suffix, UserFileKeys, UserTypes, utils, UserDoesNotExist, Search
+from spotipy import Path, Suffix, UserFileKeys, UserTypes, utils, UserDoesNotExist
 from spotipy.extract.extract_json import Json
+from spotipy.search.spotipy_search import Search
 from spotipy.users.different_users import create_user
 
 

@@ -3,8 +3,9 @@ from typing import List
 
 import spotipy
 from spotipy import Path, Suffix, UserFileKeys, PlaylistAlreadyExist, KeyDoesNotExist, utils, \
-    UserPermissions, UnauthorizedRequest, Search
+    UserPermissions, UnauthorizedRequest
 from spotipy.extract.extract_json import Json
+from spotipy.search.spotipy_search import Search
 
 
 class User:
@@ -66,3 +67,16 @@ class User:
                                           f"{self._permissions.PLAYLISTS_NUM_LIMIT} playlists")
         except AttributeError or TypeError as e:
             raise KeyDoesNotExist(e)
+
+    def search_any_request(self, func, *args):
+        def inner():
+            return func(*args)
+
+        try:
+            result = inner()
+            return result if self._permissions.SEARCH_RESULTS_LIMIT is None \
+                             or self._permissions.SEARCH_RESULTS_LIMIT >= len(result) \
+                             else result[:self._permissions.SEARCH_RESULTS_LIMIT]
+        except Exception as e:
+            spotipy.log.info(f"Search failed because of bad input to search")
+            raise e
