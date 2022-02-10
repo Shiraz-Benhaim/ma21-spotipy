@@ -1,4 +1,3 @@
-import spotipy
 from spotipy import Search, ArtistFileKeys
 from spotipy.users.user import User
 
@@ -26,4 +25,3 @@ class ArtistUser(User):
         self._user_data[ArtistFileKeys.ALBUMS_LIST_KEY_NAME] = \
             Search.albums_info_of_artist(Search.artist_id_by_name(username))
         self._update_user_file()
-

@@ -20,12 +20,13 @@ def login(username, password):
             spotipy.log.info(f"Login attempt failed because file '{username}' is in bad format")
             raise e
     else:
-        """ DEBUG"""
+        """ DEBUG
         user_type = UserTypes.ARTIST if username in Search.get_artists_names() else UserTypes.REGULAR
         user_file = {UserFileKeys.PASSWORD_KEY_NAME: password,
                      UserFileKeys.USER_TYPE_KEY_NAME: user_type,
                      UserFileKeys.PLAYLIST_LIST_KEY_NAME: []}
         utils.Utils.write_to_file(f"{Path.USERS_DIR}\\{username}{Suffix.JSON}", json.dumps(user_file))
-
+        user = create_user(username, password, user_type)
+        """
         spotipy.log.info(f"Login attempt failed because the user '{username}' does not exist")
         raise UserDoesNotExist(f"User '{username}' does not exist")
