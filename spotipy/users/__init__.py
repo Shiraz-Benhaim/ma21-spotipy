@@ -4,7 +4,6 @@ import os
 import spotipy
 from spotipy import Path, Suffix, UserDoesNotExist
 from spotipy.extract.extract_json import Json
-from spotipy.users.different_users import create_user
 from spotipy.users.user import User
 
 
