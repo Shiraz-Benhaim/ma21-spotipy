@@ -1,4 +1,5 @@
 import spotipy
+from spotipy import AlbumIdNotFound, ArtistIdNotFound
 
 
 class Actions:
@@ -28,5 +29,20 @@ class Actions:
         try:
             spotipy.curr_user.add_playlist(playlist_name, tracks)
             print(f"Playlist {playlist_name} added successfully")
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    def search_in_spotipy(func, *args):
+        function_args = []
+        for arg in args:
+            function_args += [input(f"Enter {arg}")]
+
+        try:
+            result = spotipy.curr_user.search_any_request(func, *function_args)
+            for r in result:
+                print(r)
+        except ArtistIdNotFound or AlbumIdNotFound as e:
+            print("Invalid input: " + str(e))
         except Exception as e:
             print(e)
