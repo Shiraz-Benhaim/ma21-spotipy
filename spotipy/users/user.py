@@ -2,16 +2,18 @@ import json
 from typing import List
 
 import spotipy
-from spotipy import Path, Suffix, UserFileKeys, PlaylistAlreadyExist, KeyDoesNotExist, utils
+from spotipy import Path, Suffix, UserFileKeys, PlaylistAlreadyExist, KeyDoesNotExist, utils, \
+    UserPermissions, UnauthorizedRequest
 from spotipy.extract.extract_json import Json
 
 
 class User:
-    def __init__(self, username, password):
+    def __init__(self, username, password, is_premium):
         self.username = username
         self.password = password
         self._user_file_path = f"{Path.USERS_DIR}\\{username}{Suffix.JSON}"
         self._user_data = Json(self._user_file_path).data
+        self._permissions = UserPermissions(is_premium)
 
     def __update_user_file(self):
         """Will be called after every change in data"""
@@ -34,6 +36,9 @@ class User:
             spotipy.log.info(f"Creation of playlist '{playlist_name}' failed because the json file is in a bad format")
 
     def __add_playlist_force(self, playlist_name, songs):
+        songs_limit = self._permissions.PLAYLIST_TRACKS_NUM_LIMIT
+        songs = songs if songs_limit is None or songs_limit >= len(songs) \
+            else songs[:songs_limit]
         new_playlist = {UserFileKeys.PLAYLIST_NAME_KEY: playlist_name,
                         UserFileKeys.TRACKS_LIST_KEY_NAME: songs}
         self._user_data[UserFileKeys.PLAYLIST_LIST_KEY_NAME] = \
@@ -46,6 +51,13 @@ class User:
         self.__playlist_name_validation(playlist_name)
 
         try:
-            self.__add_playlist_force(playlist_name, songs)
+            playlist_limit = self._permissions.PLAYLISTS_NUM_LIMIT
+            if playlist_limit is None or len(self.__get_playlists_names()) < playlist_limit:
+                self.__add_playlist_force(playlist_name, songs)
+            else:
+                spotipy.log.info(f"Playlist '{playlist_name}' did not created because there are already "
+                                 f"{self._permissions.PLAYLISTS_NUM_LIMIT} playlists")
+                raise UnauthorizedRequest(f"User '{self.username}' can not have more than "
+                                          f"{self._permissions.PLAYLISTS_NUM_LIMIT} playlists")
         except AttributeError or TypeError as e:
             raise KeyDoesNotExist(e)
