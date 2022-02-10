@@ -26,3 +26,11 @@ class UserAlreadyExist(Exception):
 
 class WrongPassword(Exception):
     pass
+
+
+class PlaylistAlreadyExist(Exception):
+    pass
+
+
+class UnauthorizedRequest(Exception):
+    pass

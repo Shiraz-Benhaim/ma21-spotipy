@@ -5,7 +5,7 @@ def create_logger():
     log = logging.getLogger('spotify_logger')
     log.setLevel(logging.DEBUG)
 
-    # debug and info messages will be printed to the console
+    # debug and the higher log levels will be printed to the console
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
 

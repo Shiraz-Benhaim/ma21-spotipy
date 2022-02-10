@@ -1,7 +1,3 @@
-from typing import List
-from typing import Dict
-
-
 class Track:
     def __init__(self, name, popularity):
         self.name = name
