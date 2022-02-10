@@ -1,8 +1,8 @@
-from spotipy import run
+import menu
 
 
 def main():
-    run()
+    menu.run_spotipy()
 
 
 if __name__ == '__main__':
